@@ -1,0 +1,1206 @@
+<meta charset="utf-8">
+<title>KWIQ Button Explorations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+/* ── Board tokens ─────────────────────────────────────────────────────── */
+:root{
+  --paper:#F2F5F5;
+  --card:#FFFFFF;
+  --sunken:#E7ECEC;
+  --ink:#0F1618;
+  --ink-2:#3C4A4E;
+  --ink-3:#6E7D82;
+  --rule:#D8E0E1;
+  --rule-soft:#EAEFEF;
+  --accent:#006C84;
+
+  /* Brand + glow constants — the subject, identical in both themes */
+  --cy:#58D8F5;
+  --cy-hi:#96ECFC;
+  --cy-lo:#2CBDE2;
+  --cy-deep:#1A8FAE;
+  --aqua:#35E0C0;
+  --indigo:#6E9BF5;
+  --violet:#9B84F8;
+  --bar:#22262A;
+  --bar-glass:#181D21;
+  --on-cy:#0A1417;
+
+  --conic-brand:conic-gradient(from 200deg,#58D8F5,#35E0C0,#6E9BF5,#9B84F8,#58D8F5);
+  --conic-wide:conic-gradient(from 90deg,#58D8F5,#5BE7A9,#FFD166,#FF7CA8,#9B84F8,#58D8F5);
+  --stage:#22262A;
+
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s8:48px; --s10:64px;
+  --max:1240px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1112; --card:#141B1D; --sunken:#101718;
+    --ink:#E9F1F2; --ink-2:#A6B6B9; --ink-3:#77878B;
+    --rule:#243033; --rule-soft:#1A2224; --accent:#3FB3CD;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1112; --card:#141B1D; --sunken:#101718;
+  --ink:#E9F1F2; --ink-2:#A6B6B9; --ink-3:#77878B;
+  --rule:#243033; --rule-soft:#1A2224; --accent:#3FB3CD;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:86px}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:Mulish,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--cy);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--s5)}
+
+/* ── Masthead ─────────────────────────────────────────────────────────── */
+.mast{padding:var(--s10) 0 var(--s6)}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+  display:flex;align-items:center;gap:var(--s2);margin:0 0 var(--s4)
+}
+.eyebrow .dot{
+  width:7px;height:7px;border-radius:999px;background:var(--cy);flex:none;
+  box-shadow:0 0 8px 2px rgba(88,216,245,.75)
+}
+h1{
+  font-size:clamp(34px,5.4vw,60px);line-height:1.02;font-weight:900;
+  letter-spacing:-.035em;margin:0;text-wrap:balance;max-width:14ch;
+}
+.deck{margin:var(--s5) 0 0;max-width:62ch;font-size:17px;color:var(--ink-2)}
+.deck + .deck{margin-top:var(--s3)}
+.deck strong{color:var(--ink);font-weight:700}
+.meta{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:var(--s4) var(--s5);margin-top:var(--s8);
+  padding-top:var(--s5);border-top:1px solid var(--rule);
+}
+.meta dt{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:0 0 6px
+}
+.meta dd{margin:0;font-size:14px;line-height:1.45;color:var(--ink)}
+
+/* ── Sticky index ─────────────────────────────────────────────────────── */
+.index{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);margin-top:var(--s8);
+}
+.index__scroll{
+  display:flex;gap:var(--s1);overflow-x:auto;padding:10px var(--s5);
+  max-width:var(--max);margin:0 auto;scrollbar-width:thin;
+}
+.index a{
+  flex:none;display:flex;align-items:baseline;gap:7px;padding:6px 11px;
+  border-radius:999px;text-decoration:none;color:var(--ink-2);
+  font-size:13px;font-weight:700;white-space:nowrap;transition:background .15s,color .15s;
+}
+.index a:hover{background:var(--sunken);color:var(--ink)}
+.index a i{
+  font-family:"IBM Plex Mono",monospace;font-style:normal;font-size:10px;
+  font-weight:500;color:var(--cy-deep);letter-spacing:.06em
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .index a i{color:var(--cy)}}
+:root[data-theme="dark"] .index a i{color:var(--cy)}
+
+/* ── Plates ───────────────────────────────────────────────────────────── */
+.plates{padding:var(--s8) 0 0;display:flex;flex-direction:column;gap:var(--s8)}
+.plate{
+  display:grid;grid-template-columns:280px minmax(0,1fr);gap:var(--s6);
+  align-items:start;padding-bottom:var(--s8);border-bottom:1px solid var(--rule-soft);
+}
+.plate:last-child{border-bottom:0}
+@media (max-width:900px){.plate{grid-template-columns:1fr;gap:var(--s5)}}
+
+.brief__idx{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500;
+  letter-spacing:.16em;color:var(--ink-3);display:block;margin-bottom:10px
+}
+.brief h2{font-size:27px;line-height:1.1;font-weight:800;letter-spacing:-.025em;margin:0}
+.brief__note{margin:var(--s3) 0 0;font-size:14.5px;line-height:1.55;color:var(--ink-2)}
+.brief__cost{
+  margin:var(--s3) 0 0;font-size:13.5px;line-height:1.5;color:var(--ink-3);
+  padding-left:11px;border-left:2px solid var(--rule);
+}
+.brief__cost b{color:var(--ink-2);font-weight:700}
+.attrs{margin:var(--s4) 0 0;padding:0;list-style:none;border-top:1px solid var(--rule-soft)}
+.attrs li{
+  display:grid;grid-template-columns:62px 1fr;gap:var(--s3);padding:7px 0;
+  border-bottom:1px solid var(--rule-soft);font-size:12.5px;align-items:baseline;
+}
+.attrs span{
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:500;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)
+}
+.attrs b{font-weight:600;color:var(--ink-2)}
+.brief__ref{
+  margin:var(--s4) 0 0;font-family:"IBM Plex Mono",monospace;
+  font-size:11px;line-height:1.6;color:var(--ink-3)
+}
+.brief__ref a{color:var(--accent);text-underline-offset:2px}
+
+/* ── Stage ────────────────────────────────────────────────────────────── */
+.stage{display:flex;flex-direction:column;gap:var(--s3);min-width:0}
+.statesblock{display:flex;flex-direction:column;gap:var(--s3)}
+.stage__cap{
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)
+}
+.frame{
+  border-radius:10px;overflow:hidden;background:var(--bar);border:1px solid var(--rule);
+  box-shadow:0 1px 2px rgba(15,22,24,.06),0 12px 28px -18px rgba(15,22,24,.5);
+}
+.frame__body{background:var(--card);padding:16px 24px 20px;display:flex;flex-direction:column;gap:2px}
+.fb__date{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;color:var(--ink-3)}
+.fb__hi{font-size:21px;font-weight:800;letter-spacing:-.02em;color:var(--ink);opacity:.34}
+
+.bar{height:64px;display:flex;align-items:center;gap:var(--s5);padding:0 20px;background:var(--bar);position:relative}
+.bar--flush{padding-right:0}
+.bar__kw{
+  width:40px;height:40px;border-radius:5px;background:#CC0000;flex:none;
+  display:grid;place-items:center;color:#fff;font-weight:800;font-size:14px;letter-spacing:-.02em
+}
+.bar__nav{display:flex;align-items:center;gap:18px;flex:none}
+.bar__nav b{color:#fff;font-size:19px;font-weight:700;letter-spacing:-.01em}
+.bar__nav i{color:rgba(255,255,255,.45);font-size:19px;font-style:normal;font-weight:600}
+.bar__gap{flex:1 1 auto;min-width:8px}
+.bar__slot{display:flex;align-items:center;flex:none}
+.bar__slot--center{flex:1 1 auto;justify-content:center;min-width:0}
+.bar__tools{display:flex;align-items:center;gap:var(--s4);flex:none}
+.bar__tools svg{width:19px;height:19px;color:rgba(255,255,255,.72);display:block}
+.bar__me{display:flex;align-items:center;gap:9px;flex:none}
+.bar__av{width:30px;height:30px;border-radius:999px;flex:none;background:linear-gradient(150deg,#7E9AA6,#4A6470)}
+.bar__me span{color:#fff;font-size:14px;font-weight:600;white-space:nowrap}
+.bar__me svg{width:11px;height:11px;color:rgba(255,255,255,.6)}
+@media (max-width:1100px){.bar__me span{display:none}.bar{gap:var(--s4);padding:0 14px}}
+@media (max-width:760px){.bar__tools{display:none}}
+
+/* ── In-situ tabs ─────────────────────────────────────────────────────── */
+.stage__bar{display:flex;align-items:center;gap:var(--s4)}
+.tabs{
+  display:inline-flex;gap:2px;padding:3px;background:var(--sunken);
+  border-radius:8px;align-self:flex-start;
+}
+.tab{
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:500;
+  letter-spacing:.11em;text-transform:uppercase;border:0;background:none;cursor:pointer;
+  color:var(--ink-3);padding:5px 10px;border-radius:6px;transition:background .15s,color .15s;
+}
+.tab:hover{color:var(--ink-2)}
+.tab.is-active{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(15,22,24,.14)}
+
+/* ── Full-dashboard in-situ view — Command home replica ───────────────── */
+.cmd{background:var(--paper);color:var(--ink);font-size:13px;line-height:1.45}
+.cmd *{box-sizing:border-box}
+
+/* top bar — houses the concept button in the KWIQ slot */
+.cmd__bar{display:flex;align-items:center;gap:16px;height:60px;padding:0 14px;background:#0E2C33}
+.cmd__bar--flush{padding-right:0}
+.cmd__logo{width:30px;height:30px;border-radius:5px;background:#CC0000;display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px;flex:none}
+.cmd__nav{display:flex;align-items:center;gap:16px;flex:none}
+.cmd__nav a{color:rgba(255,255,255,.5);font-size:15px;font-weight:700;letter-spacing:-.01em;cursor:pointer}
+.cmd__nav a.on{color:#fff}
+.cmd__nav sup{font-size:8px;font-weight:800}
+.cmd__spring{flex:1 1 auto;min-width:8px}
+.cmd__right{display:flex;align-items:center;gap:15px;flex:none;padding-right:14px}
+.cmd__kwiq{display:inline-flex;align-items:center}
+.cmd__kwiq--edge{align-self:stretch}
+.cmd__kwiq--edge .k--rail{height:60px}
+.cmd__ico{width:19px;height:19px;color:rgba(255,255,255,.82);display:block;cursor:pointer}
+.cmd__belldot{position:relative;display:flex;align-items:center;gap:5px}
+.cmd__badge{background:#E5484D;color:#fff;font-size:9px;font-weight:800;border-radius:999px;padding:1px 5px;font-family:"IBM Plex Mono",monospace}
+.cmd__me{display:flex;align-items:center;gap:8px;cursor:pointer}
+.cmd__av{width:30px;height:30px;border-radius:999px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}
+.cmd__meid b{color:#fff;font-size:13px;font-weight:700;display:block;line-height:1.15}
+.cmd__meid span{color:rgba(255,255,255,.55);font-size:10px;display:block;line-height:1.2}
+.cmd__me > svg{width:11px;height:11px;color:rgba(255,255,255,.55)}
+.cmd__help{width:26px;height:26px;border-radius:999px;border:1px solid rgba(255,255,255,.28);display:grid;place-items:center;color:rgba(255,255,255,.82);flex:none}
+.cmd__help svg{width:14px;height:14px}
+
+/* rail + main */
+.cmd__wrap{display:flex}
+.cmd__rail{width:50px;background:var(--card);border-right:1px solid var(--rule-soft);display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;flex:none}
+.cmd__ri{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;color:var(--ink-3)}
+.cmd__ri.on{background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--accent)}
+.cmd__ri svg{width:19px;height:19px}
+.cmd__main{flex:1 1 auto;min-width:0;padding:18px 20px 24px}
+
+.cmd__head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+.cmd__welcome{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:0;color:var(--ink);white-space:nowrap}
+.cmd__customize{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--ink-2);background:var(--card);border:1px solid var(--rule);border-radius:9px;padding:8px 13px;cursor:pointer}
+.cmd__customize svg{width:13px;height:13px;color:var(--ink-3)}
+
+.cmd__pills{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:18px}
+.pill{display:inline-flex;align-items:center;gap:13px;background:var(--card);border:0;border-radius:999px;padding:13px 16px;box-shadow:0 1px 2px rgba(15,22,24,.05),0 8px 20px -12px rgba(15,22,24,.4)}
+.pill__ic{width:30px;height:30px;display:grid;place-items:center;color:#1E63B0;flex:none}
+.pill__ic svg{width:27px;height:27px;stroke-width:1.8}
+.pill__t{flex:none}
+.pill__t b{display:block;font-size:14.5px;font-weight:800;letter-spacing:-.015em;color:var(--ink);line-height:1.2;white-space:nowrap}
+.pill__t span{display:block;font-size:11.5px;color:var(--ink-3);margin-top:1px;white-space:nowrap}
+.pill__n{background:linear-gradient(158deg,#2E7BD6,#1B4F8F);color:#fff;font-size:13px;font-weight:800;border-radius:999px;min-width:34px;height:34px;padding:0 8px;display:grid;place-items:center;flex:none;box-shadow:0 2px 6px -1px rgba(27,79,143,.5)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pill__ic{color:#5AA0E8}}
+:root[data-theme="dark"] .pill__ic{color:#5AA0E8}
+
+.cmd__cols{display:grid;grid-template-columns:minmax(0,1fr) 292px;gap:16px;align-items:start}
+.card{background:var(--card);border:1px solid var(--rule-soft);border-radius:14px;overflow:hidden;margin-bottom:16px}
+.card:last-child{margin-bottom:0}
+.card__h{display:flex;align-items:center;gap:9px;padding:14px 16px}
+.card__h > svg{width:19px;height:19px;color:var(--ink-2);flex:none}
+.card__h b{font-size:15px;font-weight:800;letter-spacing:-.01em;color:var(--ink)}
+.card__h .sp{flex:1 1 auto}
+.card__edit{display:inline-flex;align-items:center;gap:5px;color:var(--accent);font-size:12px;font-weight:700;cursor:pointer}
+.card__edit svg{width:13px;height:13px}
+
+/* tasks */
+.tk__ctl{display:flex;align-items:center;gap:12px}
+.tk__drop{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--ink-2);cursor:pointer}
+.tk__drop svg{width:11px;height:11px}
+.tk__seg{display:inline-flex;background:var(--sunken);border-radius:9px;padding:2px}
+.tk__seg span{padding:5px 11px;font-size:11.5px;font-weight:700;color:var(--ink-3);border-radius:7px;cursor:pointer}
+.tk__seg span.on{background:var(--card);color:var(--accent);box-shadow:0 1px 2px rgba(15,22,24,.12)}
+.tk table{width:100%;border-collapse:collapse;font-size:12.5px}
+.tk th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500;padding:9px 16px;border-top:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft)}
+.tk td{padding:11px 16px;border-bottom:1px solid var(--rule-soft);color:var(--ink-2);vertical-align:middle}
+.tk td b{color:var(--ink);font-weight:700}
+.who{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.who .a{width:22px;height:22px;border-radius:999px;background:var(--accent);color:#fff;font-size:8.5px;font-weight:800;display:grid;place-items:center}
+.prio{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
+.prio svg{width:12px;height:12px}
+.prio--hi{background:#FCE9E9;color:#C0392B}
+.prio--md{background:var(--sunken);color:var(--ink-2)}
+.tk__time{color:var(--ink-3);font-size:11px}
+.tk__act{display:flex;gap:10px;color:var(--ink-3)}
+.tk__act svg{width:18px;height:18px;cursor:pointer}
+.tk__foot{display:flex;align-items:center;justify-content:space-between;padding:13px 16px}
+.tk__create{color:var(--accent);font-weight:700;display:inline-flex;align-items:center;gap:7px;font-size:13px;cursor:pointer}
+.tk__create svg{width:17px;height:17px}
+.tk__page{display:inline-flex;align-items:center;gap:14px;color:var(--ink-2);font-size:12px}
+.tk__page b{color:var(--ink);font-weight:700}
+.tk__page svg{width:15px;height:15px;color:var(--ink-3);cursor:pointer}
+
+/* goals */
+.goals{padding:2px 16px 18px}
+.goals__lg{font-size:12px;font-weight:700;color:var(--ink-2);display:flex;align-items:center;gap:7px;margin:0 0 14px}
+.goals__lg::before{content:"";width:8px;height:8px;border-radius:999px;background:var(--accent)}
+.goals__row{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.goal{flex:1 1 0;min-width:92px;text-align:center}
+.goal b{display:block;font-size:12.5px;font-weight:800;color:var(--ink)}
+.goal em{display:block;font-size:10.5px;color:var(--ink-3);font-style:normal;margin-bottom:9px}
+.ring{display:block;width:56px;height:56px;border-radius:999px;border:6px solid var(--rule-soft);margin:0 auto}
+.goal--gci em.small{font-size:10px;font-style:italic;margin:8px 0 0}
+
+/* market center */
+.mc__ban{height:116px;margin:2px 16px 0;border-radius:10px;background:#B49B78;display:grid;place-items:center;position:relative;color:#fff}
+.mc__ban b{font-size:26px;font-weight:800;letter-spacing:.14em}
+.mc__arrow{position:absolute;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:999px;background:#fff;color:var(--ink-2);display:grid;place-items:center;box-shadow:0 2px 7px rgba(0,0,0,.25)}
+.mc__arrow svg{width:15px;height:15px}
+.mc__arrow.l{left:10px}
+.mc__arrow.r{right:10px}
+.mc__cap{padding:12px 16px 16px}
+.mc__cap b{font-size:14px;font-weight:800;color:var(--ink);display:block}
+.mc__cap span{font-size:12px;color:var(--ink-3)}
+.mc__cap a{color:var(--accent);font-weight:700}
+
+/* recent leads */
+.lead{display:flex;align-items:center;gap:10px;padding:11px 16px;border-top:1px solid var(--rule-soft)}
+.lead__cb{width:15px;height:15px;border:1.5px solid var(--rule);border-radius:4px;flex:none}
+.lead__t{flex:1 1 auto;min-width:0}
+.lead__t b{display:block;font-size:13px;font-weight:700;color:var(--ink)}
+.lead__t span{display:block;font-size:11px;color:var(--ink-3)}
+.lead__ago{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--ink-3);background:var(--sunken);border-radius:999px;padding:3px 8px;white-space:nowrap}
+.lead__kb{color:var(--ink-3);display:flex}
+.lead__kb svg{width:16px;height:16px}
+
+/* appointments */
+.appt{display:flex;align-items:center;gap:12px;padding:11px 16px;border-top:1px solid var(--rule-soft)}
+.appt__t{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--accent);font-weight:700;width:52px;flex:none}
+.appt__d{flex:1 1 auto;min-width:0}
+.appt__d b{display:block;font-size:13px;font-weight:700;color:var(--ink)}
+.appt__d span{display:block;font-size:11px;color:var(--ink-3)}
+.appt__av{width:24px;height:24px;border-radius:999px;background:var(--accent);color:#fff;font-size:8.5px;font-weight:800;display:grid;place-items:center;flex:none}
+
+/* desktop crop window — render at true 1440px width, scale to fit, clip to a ~1440×1024 landscape frame */
+.deskcrop{position:relative;width:100%;max-width:1440px;margin:0 auto;overflow:hidden;background:var(--paper)}
+.deskscale{position:absolute;top:0;left:0;width:1440px;transform-origin:top left}
+
+/* ── States strip ─────────────────────────────────────────────────────── */
+.states{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden;
+}
+.states__cell{
+  background:var(--stage);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:var(--s3);padding:var(--s4) var(--s2);
+}
+.states__cell em{
+  font-family:"IBM Plex Mono",monospace;font-style:normal;font-size:9.5px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.38)
+}
+.zoom{display:flex;align-items:center;justify-content:center;transform-origin:center;height:100px;width:100%}
+.states__cell--rail{padding:0 0 var(--s3)}
+.states__cell--rail .zoom{height:108px}
+
+/* ══ SPECIMENS ═══════════════════════════════════════════════════════════
+   All built from the shipped mark: Project X/assets/kwiqButton.svg
+   ═══════════════════════════════════════════════════════════════════════ */
+.k{
+  font-family:inherit;border:0;background:none;padding:0;margin:0;
+  display:inline-flex;align-items:center;cursor:pointer;color:inherit;position:relative;
+  transition:background .2s ease,color .2s ease,box-shadow .22s ease,
+             transform .12s ease,opacity .2s ease,filter .22s ease;
+}
+.k .spark{width:17px;height:17px;flex:none;display:block}
+.k .word{width:23px;height:auto;flex:none;display:block;transform:translateY(9%)}
+.k svg path{fill:currentColor}
+.core{
+  display:inline-flex;align-items:center;justify-content:center;
+  position:relative;z-index:1;height:100%;width:100%;
+}
+
+/* 01 — Spectrum Ring: rotating conic border, dark glass core */
+.k--ring{
+  height:38px;padding:1.5px;border-radius:999px;overflow:hidden;
+  background:var(--bar-glass);color:#EAFBFF;
+}
+.k--ring::before{
+  content:"";position:absolute;left:50%;top:50%;width:170%;aspect-ratio:1;
+  translate:-50% -50%;background:var(--conic-wide);
+  animation:spin 7s linear infinite;
+}
+.k--ring .core{
+  padding:0 15px 0 13px;gap:8px;border-radius:999px;background:#191E22;
+}
+@keyframes spin{to{rotate:360deg}}
+.k--ring:hover,.k--ring.is-hover{filter:saturate(1.2) brightness(1.12)}
+.k--ring:hover .core,.k--ring.is-hover .core{background:#20262B}
+.k--ring:active,.k--ring.is-active{transform:translateY(1px)}
+.k--ring:active .core,.k--ring.is-active .core{background:#12171A}
+
+/* 02 — Neon Outline: one hue, cyan stroke + inner and outer light */
+.k--neon{
+  height:36px;padding:0 16px 0 14px;gap:9px;border-radius:999px;
+  background:rgba(88,216,245,.05);color:var(--cy);
+  box-shadow:inset 0 0 0 1px rgba(88,216,245,.85),
+             inset 0 0 12px rgba(88,216,245,.22),
+             0 0 12px rgba(88,216,245,.30);
+  text-shadow:0 0 10px rgba(88,216,245,.55);
+}
+.k--neon:hover,.k--neon.is-hover{
+  background:rgba(88,216,245,.11);color:#B8F2FE;
+  box-shadow:inset 0 0 0 1px var(--cy),inset 0 0 16px rgba(88,216,245,.35),
+             0 0 22px rgba(88,216,245,.55);
+}
+.k--neon:active,.k--neon.is-active{
+  background:rgba(88,216,245,.18);color:#fff;transform:translateY(1px);
+  box-shadow:inset 0 0 0 1px var(--cy),inset 0 0 20px rgba(88,216,245,.5),
+             0 0 10px rgba(88,216,245,.4);
+}
+
+/* 03 — Bloom: solid fill, wide light spill onto the bar */
+.k--bloom{
+  height:36px;padding:0 15px 0 13px;gap:8px;border-radius:999px;
+  background:var(--cy);color:var(--on-cy);
+  box-shadow:0 0 18px 2px rgba(88,216,245,.55),0 0 46px 12px rgba(88,216,245,.30),
+             0 0 90px 30px rgba(88,216,245,.14);
+}
+.k--bloom:hover,.k--bloom.is-hover{
+  background:var(--cy-hi);
+  box-shadow:0 0 22px 3px rgba(88,216,245,.72),0 0 58px 16px rgba(88,216,245,.40),
+             0 0 110px 38px rgba(88,216,245,.20);
+}
+.k--bloom:active,.k--bloom.is-active{
+  background:var(--cy-lo);transform:translateY(1px);
+  box-shadow:0 0 12px 1px rgba(88,216,245,.55),0 0 30px 8px rgba(88,216,245,.24);
+}
+
+/* 04 — Aurora Fill: gradient face over a blurred twin */
+.k--aurora{
+  height:36px;padding:0 15px 0 13px;gap:8px;border-radius:999px;color:#08101A;
+  background:linear-gradient(102deg,#58D8F5 0%,#6E9BF5 52%,#9B84F8 100%);
+}
+.k--aurora{
+  /* the "leak" is two coloured shadows, one per gradient end */
+  box-shadow:-11px 7px 20px -6px rgba(88,216,245,.80),
+              11px 7px 20px -6px rgba(155,132,248,.80),
+              0 2px 6px -2px rgba(8,16,26,.55);
+}
+.k--aurora:hover,.k--aurora.is-hover{
+  background:linear-gradient(102deg,#7DE4F9 0%,#8EB2F9 52%,#B5A2FB 100%);
+  box-shadow:-15px 10px 28px -6px rgba(88,216,245,.95),
+              15px 10px 28px -6px rgba(155,132,248,.95),
+              0 3px 8px -2px rgba(8,16,26,.55);
+}
+.k--aurora:active,.k--aurora.is-active{
+  background:linear-gradient(102deg,#3FC5E6 0%,#5A86E4 52%,#8368E6 100%);transform:translateY(1px);
+  box-shadow:-6px 4px 12px -5px rgba(88,216,245,.70),
+              6px 4px 12px -5px rgba(155,132,248,.70);
+}
+
+/* 05 — Glass Capsule: frosted, lit from above */
+.k--glass{
+  height:36px;padding:0 15px 0 13px;gap:8px;border-radius:999px;
+  background:rgba(255,255,255,.09);backdrop-filter:blur(14px);color:#EAF9FE;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.30),inset 0 0 0 1px rgba(255,255,255,.13),
+             0 6px 18px -8px rgba(0,0,0,.6);
+}
+.k--glass .spark{color:var(--cy)}
+.k--glass:hover,.k--glass.is-hover{
+  background:rgba(255,255,255,.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 0 0 1px rgba(88,216,245,.40),
+             0 0 20px rgba(88,216,245,.24);
+}
+.k--glass:active,.k--glass.is-active{
+  background:rgba(255,255,255,.20);transform:translateY(1px);
+  box-shadow:inset 0 0 0 1px rgba(88,216,245,.6),inset 0 2px 8px rgba(0,0,0,.35);
+}
+
+/* 06 — Aura Orb: conic disc, mark only, radiating halo */
+.k--orb{
+  width:38px;height:38px;border-radius:999px;justify-content:center;padding:1.5px;
+  background:transparent;color:#EAFBFF;overflow:visible;isolation:isolate;
+}
+.k--orb::before{ /* blurred halo */
+  content:"";position:absolute;inset:-9px;border-radius:999px;z-index:1;
+  background:var(--conic-brand);filter:blur(13px);opacity:.62;
+  animation:auraSpin 9s linear infinite;
+  transition:opacity .22s ease,inset .22s ease;
+}
+.k--orb::after{ /* crisp conic edge */
+  content:"";position:absolute;inset:0;border-radius:999px;z-index:2;
+  background:var(--conic-brand);animation:spin 7s linear infinite;
+}
+@keyframes auraSpin{to{rotate:360deg}}
+.k--orb .core{border-radius:999px;background:#1A1F23;z-index:3}
+.k--orb .spark{width:19px;height:19px}
+.k--orb:hover,.k--orb.is-hover{transform:scale(1.05)}
+.k--orb:hover::before,.k--orb.is-hover::before{opacity:.95;inset:-12px}
+.k--orb:active,.k--orb.is-active{transform:scale(.95)}
+.k--orb:active::before,.k--orb.is-active::before{opacity:.5;inset:-5px}
+
+/* 07 — Underglow: flat face, colour pooled beneath it */
+.k--under{
+  height:36px;padding:0 15px 0 13px;gap:8px;border-radius:999px;
+  background:var(--cy);color:var(--on-cy);
+  box-shadow:0 7px 18px -5px rgba(88,216,245,.80),0 2px 5px -1px rgba(10,20,23,.45);
+}
+.k--under:hover,.k--under.is-hover{
+  background:var(--cy-hi);transform:translateY(-1px);
+  box-shadow:0 11px 24px -5px rgba(88,216,245,.95),0 3px 7px -1px rgba(10,20,23,.45);
+}
+.k--under:active,.k--under.is-active{
+  background:var(--cy-lo);transform:translateY(2px);
+  box-shadow:0 3px 9px -4px rgba(88,216,245,.70);
+}
+
+/* 08 — Iridescent Field */
+.k--field{
+  height:38px;width:min(380px,100%);padding:0 6px 0 12px;gap:9px;border-radius:999px;
+  justify-content:flex-start;color:rgba(255,255,255,.66);overflow:hidden;
+  background:
+    linear-gradient(100deg,rgba(88,216,245,.16),rgba(110,155,245,.10) 45%,rgba(155,132,248,.16)),
+    rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+}
+.k--field .spark{color:var(--cy)}
+.k--field .ph{font-size:14.5px;font-weight:600;letter-spacing:-.005em;flex:1 1 auto;text-align:left}
+.k--field kbd{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500;padding:4px 7px;
+  border-radius:6px;flex:none;background:rgba(255,255,255,.10);color:rgba(255,255,255,.62);
+}
+.k--field:hover,.k--field.is-hover{
+  color:rgba(255,255,255,.86);
+  background:
+    linear-gradient(100deg,rgba(88,216,245,.30),rgba(110,155,245,.18) 45%,rgba(155,132,248,.30)),
+    rgba(255,255,255,.07);
+  box-shadow:inset 0 0 0 1px rgba(88,216,245,.40),0 0 22px -6px rgba(88,216,245,.45);
+}
+.k--field:active,.k--field.is-active{
+  color:#fff;
+  background:
+    linear-gradient(100deg,rgba(88,216,245,.42),rgba(110,155,245,.26) 45%,rgba(155,132,248,.42)),
+    rgba(255,255,255,.09);
+  box-shadow:inset 0 0 0 1.5px var(--cy),0 0 0 4px rgba(88,216,245,.16);
+}
+
+/* 09 — Halo Ring: detached ring of light that pulses on new insight */
+.k--halo{
+  height:36px;padding:0 15px 0 13px;gap:8px;border-radius:999px;
+  background:#1B2126;color:var(--cy);
+  box-shadow:0 0 0 1px rgba(88,216,245,.90),0 0 0 5px rgba(88,216,245,.14),
+             0 0 16px rgba(88,216,245,.28);
+}
+.k--halo::after{
+  content:"";position:absolute;inset:-5px;border-radius:999px;pointer-events:none;
+  box-shadow:0 0 0 1px rgba(88,216,245,.55);
+  animation:ping 3.4s cubic-bezier(.2,.7,.3,1) infinite;
+}
+@keyframes ping{
+  0%{inset:-5px;opacity:.75}
+  60%,100%{inset:-16px;opacity:0}
+}
+.k--halo:hover,.k--halo.is-hover{
+  background:#22292F;color:#B8F2FE;
+  box-shadow:0 0 0 1px var(--cy),0 0 0 6px rgba(88,216,245,.22),0 0 26px rgba(88,216,245,.45);
+}
+.k--halo:active,.k--halo.is-active{
+  background:var(--cy);color:var(--on-cy);transform:translateY(1px);
+  box-shadow:0 0 0 1px var(--cy),0 0 0 3px rgba(88,216,245,.30),0 0 20px rgba(88,216,245,.5);
+}
+
+/* 10 — Nebula Rail: full-height, flush, weather inside it */
+.k--rail{
+  height:64px;padding:0 26px;border-radius:0;align-self:stretch;
+  color:#E8FAFF;overflow:hidden;background:#161B1F;isolation:isolate;
+}
+.k--rail .core{gap:10px}
+.k--rail::before{
+  content:"";position:absolute;inset:-40%;
+  background:
+    radial-gradient(42% 58% at 22% 28%,rgba(88,216,245,.75),transparent 70%),
+    radial-gradient(46% 62% at 78% 74%,rgba(155,132,248,.62),transparent 72%),
+    radial-gradient(38% 50% at 62% 18%,rgba(53,224,192,.38),transparent 72%);
+  filter:blur(14px);opacity:.85;z-index:1;
+  animation:drift 14s ease-in-out infinite alternate;
+}
+@keyframes drift{to{transform:translate3d(6%,-5%,0) scale(1.14)}}
+.k--rail .spark{width:19px;height:19px}
+.k--rail .word{width:26px}
+.k--rail:hover::before,.k--rail.is-hover::before{opacity:1;filter:blur(10px)}
+.k--rail:active::before,.k--rail.is-active::before{opacity:.7;filter:blur(20px)}
+.states__cell--rail .k--rail{height:108px;width:100%;justify-content:center}
+
+/* 11 — Nebula Pill: 10's weather, clipped into a normal control */
+.k--nebula{
+  height:36px;padding:0 15px 0 13px;border-radius:999px;
+  color:#F0FCFF;overflow:hidden;background:#14191D;isolation:isolate;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
+}
+.k--nebula::before{
+  content:"";position:absolute;inset:-60%;z-index:1;
+  background:
+    radial-gradient(40% 56% at 20% 26%,rgba(88,216,245,.60),transparent 70%),
+    radial-gradient(44% 60% at 80% 76%,rgba(155,132,248,.52),transparent 72%),
+    radial-gradient(36% 48% at 60% 16%,rgba(53,224,192,.30),transparent 72%);
+  filter:blur(9px);opacity:.92;
+  animation:drift 14s ease-in-out infinite alternate;
+  transition:opacity .22s ease,filter .22s ease;
+}
+.k--nebula .core{gap:8px}
+.k--nebula:hover,.k--nebula.is-hover{
+  box-shadow:inset 0 0 0 1px rgba(88,216,245,.40),0 0 20px -4px rgba(88,216,245,.40);
+}
+.k--nebula:hover::before,.k--nebula.is-hover::before{opacity:1;filter:blur(6px)}
+.k--nebula:active,.k--nebula.is-active{
+  transform:translateY(1px);box-shadow:inset 0 0 0 1px rgba(88,216,245,.55);
+}
+.k--nebula:active::before,.k--nebula.is-active::before{opacity:.72;filter:blur(13px)}
+
+/* 12 — Aura Pill: 06's conic edge, stretched to hold the wordmark.
+   The conic lives on a large square layer clipped by the pill, so rotating it
+   never pushes the shape out of bounds — and it only turns on hover. */
+.k--aurapill{
+  height:38px;padding:1.5px;border-radius:999px;overflow:hidden;isolation:isolate;
+  background:var(--conic-brand);color:#EAFBFF;
+  box-shadow:-10px 5px 20px -7px rgba(88,216,245,.42),
+              10px 5px 20px -7px rgba(155,132,248,.42);
+}
+.k--aurapill::before{
+  content:"";position:absolute;left:50%;top:50%;width:170%;aspect-ratio:1;
+  translate:-50% -50%;z-index:1;background:var(--conic-brand);
+  animation:spin 5s linear infinite;animation-play-state:paused;
+}
+.k--aurapill .core{
+  z-index:2;border-radius:999px;background:#1A1F23;padding:0 14px 0 12px;gap:8px;
+}
+.k--aurapill:hover,.k--aurapill.is-hover{
+  color:#FFFFFF;
+  box-shadow:-15px 7px 28px -6px rgba(88,216,245,.78),
+              15px 7px 28px -6px rgba(155,132,248,.78);
+}
+.k--aurapill:hover::before,
+.k--aurapill.is-hover::before,
+.k--aurapill:focus-visible::before{animation-play-state:running}
+.k--aurapill:hover .core,.k--aurapill.is-hover .core{background:#212831}
+.k--aurapill:active,.k--aurapill.is-active{transform:translateY(1px)}
+.k--aurapill:active::before,.k--aurapill.is-active::before{animation-play-state:running}
+.k--aurapill:active .core,.k--aurapill.is-active .core{background:#12171A}
+
+/* 13 — Brand Ramp: soft vertical ramp, top-lit, white label */
+.k--ramp{
+  height:36px;padding:0 15px 0 13px;gap:8px;border-radius:999px;color:#FFFFFF;
+  background:linear-gradient(170deg,#7ADCEA 0%,#6FC9E8 16%,#7FA8F0 58%,#8E7BEE 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),
+             inset 0 -1px 0 rgba(20,10,60,.16),
+             0 2px 6px -2px rgba(20,14,60,.45);
+}
+.k--ramp:hover,.k--ramp.is-hover{
+  background:linear-gradient(170deg,#8FE6F1 0%,#84D6EF 16%,#93B7F4 58%,#A18DF3 100%);
+  transform:translateY(-1px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),
+             inset 0 -1px 0 rgba(20,10,60,.16),
+             0 5px 12px -3px rgba(20,14,60,.50);
+}
+.k--ramp:active,.k--ramp.is-active{
+  background:linear-gradient(170deg,#5FC4D6 0%,#57B2D8 16%,#6A92E0 58%,#7864DC 100%);
+  transform:translateY(1px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 1px 3px -1px rgba(20,14,60,.45);
+}
+
+/* ── Closing ──────────────────────────────────────────────────────────── */
+.close{margin:var(--s10) 0;padding:var(--s8) 0 0;border-top:2px solid var(--ink)}
+.close h2{font-size:30px;font-weight:800;letter-spacing:-.025em;margin:0 0 var(--s5);max-width:20ch}
+.close__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--s6)}
+.close__col h3{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin:0 0 var(--s3);
+  padding-bottom:var(--s2);border-bottom:1px solid var(--rule);
+}
+.close__col p{margin:0 0 var(--s3);font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.close__col p b{color:var(--ink);font-weight:700}
+.close__col ol{margin:0;padding-left:1.1em;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.close__col ol li{margin-bottom:var(--s2)}
+.foot{
+  padding:var(--s5) 0 var(--s10);border-top:1px solid var(--rule);
+  font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);
+  display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5);
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow"><span class="dot"></span>PX Brand Ideation · Command dashboard · top bar</p>
+    <h1>KWIQ Button Explorations</h1>
+    <p class="deck">
+      Thirteen treatments in the <strong>glow-and-gradient</strong> family — conic rings, ambient
+      bloom, frosted glass, light pooled under the face. The reference board is doing one
+      thing consistently: it makes the button look like a <strong>light source</strong>
+      rather than a shape, so the surface around it reacts.
+    </p>
+    <p class="deck">
+      Each sits in a live Command bar at true scale, built from the shipped mark. Hover any
+      specimen; the strip underneath shows rest, hover and pressed together. Most of these
+      stay inside KW cyan — a few reach for indigo and violet so you can see where the
+      family stops being ours.
+    </p>
+    <dl class="meta">
+      <div><dt>Baseline</dt><dd>PX Brand Ideation → “Command: Initial State”</dd></div>
+      <div><dt>Mark</dt><dd><span class="mono">Project X/assets/kwiqButton.svg</span></dd></div>
+      <div><dt>Core hue</dt><dd>KWIQ cyan <span class="mono">#58D8F5</span> · XDS Mulish</dd></div>
+      <div><dt>Bar</dt><dd>64px · <span class="mono">#22262A</span> · KW Red <span class="mono">#CC0000</span></dd></div>
+    </dl>
+  </header>
+</div>
+
+<nav class="index" aria-label="Explorations">
+  <div class="index__scroll" id="index"></div>
+</nav>
+
+<div class="wrap">
+  <main class="plates" id="plates"></main>
+
+  <section class="close">
+    <h2>Where I’d take it</h2>
+    <div class="close__grid">
+      <div class="close__col">
+        <h3>The read</h3>
+        <p>
+          This whole family works by spending light, and a 64px bar gives you very little
+          room to spend it in. The three that survive that constraint are <b>02</b>,
+          <b>03</b> and <b>07</b> — all single-hue, all cyan, all legible at 36px without
+          a gradient doing the explaining.
+        </p>
+        <p>
+          <b>02</b> is the one I’d put in front of the team. It is the reference board’s
+          idea executed entirely in KW cyan: the glow is the brand color, not a borrowed
+          spectrum, and it reads as “powered” rather than “decorated”.
+        </p>
+        <p>
+          <b>11</b> is the useful compromise: <b>10</b>’s nebula clipped into a normal
+          36px control, so you can put that treatment in the bar without giving up the
+          corner. Worth building purely to see whether the effect survives being small.
+        </p>
+      </div>
+      <div class="close__col">
+        <h3>Where the family breaks</h3>
+        <p>
+          <b>01</b>, <b>06</b> and <b>12</b> are the most faithful to the reference and
+          the least faithful to KW — a rotating spectrum on a bar that already carries KW
+          Red gives the chrome three competing identities. Beautiful in isolation, loud in
+          situ, and <b>12</b> is the loudest of the three because a pill gives the gradient
+          the most arc to show.
+        </p>
+        <p>
+          <b>04</b>, <b>10</b> and <b>13</b> bring indigo and violet into a system whose action color
+          is teal. Worth showing to make the boundary visible, not worth shipping unless
+          PX is deliberately extending the palette — which is a brand decision, not a
+          button decision.
+        </p>
+      </div>
+      <div class="close__col">
+        <h3>What to resolve</h3>
+        <ol>
+          <li>Does the glow survive the light dashboard below it, or does it only work against <span class="mono">#22262A</span>? Test <b>03</b> and <b>07</b> on both surfaces.</li>
+          <li>Pick the motion budget. <b>01</b>, <b>06</b>, <b>09</b> and <b>10</b> animate at rest — that is a permanent moving object in the chrome, and it needs a reduced-motion answer.</li>
+          <li><b>09</b>’s ping should fire on new insight, not on a loop. Decide what triggers it before it becomes decoration.</li>
+          <li>Glow is not a token yet. Whatever wins needs a named elevation in XDS, or every team re-invents the blur radius.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>Static exploration · no live data</span>
+    <span>Type: Mulish 400/700/800 · IBM Plex Mono</span>
+    <span>References curated via Mobbin</span>
+  </footer>
+</div>
+
+<script>
+var SPARK_D = "M9 1C9 0.447715 8.55228 0 8 0C7.44772 0 7 0.447715 7 1C7 4.31371 4.31371 7 1 7C0.447715 7 0 7.44772 0 8C0 8.55228 0.447715 9 1 9C4.31371 9 7 11.6863 7 15C7 15.5523 7.44772 16 8 16C8.55228 16 9 15.5523 9 15C9 11.6863 11.6863 9 15 9C15.5523 9 16 8.55228 16 8C16 7.44772 15.5523 7 15 7C11.6863 7 9 4.31371 9 1ZM4.87601 8C6.18717 7.27243 7.27243 6.18717 8 4.87601C8.72757 6.18717 9.81283 7.27243 11.124 8C9.81283 8.72757 8.72757 9.81283 8 11.124C7.27243 9.81283 6.18717 8.72757 4.87601 8ZM22 6C22.5523 6 23 6.44772 23 7C23 8.3488 23.407 9.3227 24.0421 9.95787C24.6773 10.593 25.6512 11 27 11C27.5523 11 28 11.4477 28 12C28 12.5523 27.5523 13 27 13C25.6512 13 24.6773 13.407 24.0421 14.0421C23.407 14.6773 23 15.6512 23 17C23 17.5523 22.5523 18 22 18C21.4477 18 21 17.5523 21 17C21 15.6512 20.593 14.6773 19.9579 14.0421C19.3227 13.407 18.3488 13 17 13C16.4477 13 16 12.5523 16 12C16 11.4477 16.4477 11 17 11C18.3488 11 19.3227 10.593 19.9579 9.95787C20.593 9.3227 21 8.3488 21 7C21 6.44772 21.4477 6 22 6ZM22 10.6085C21.8162 10.8821 21.6069 11.1373 21.3721 11.3721C21.1373 11.6069 20.8821 11.8162 20.6085 12C20.8821 12.1838 21.1373 12.3931 21.3721 12.6279C21.6069 12.8627 21.8162 13.1179 22 13.3915C22.1838 13.1179 22.3931 12.8627 22.6279 12.6279C22.8627 12.3931 23.1179 12.1838 23.3915 12C23.1179 11.8162 22.8627 11.6069 22.6279 11.3721C22.3931 11.1373 22.1838 10.8821 22 10.6085ZM14 16C14.5523 16 15 16.4477 15 17C15 18.3488 15.407 19.3227 16.0421 19.9579C16.6773 20.593 17.6512 21 19 21C19.5523 21 20 21.4477 20 22C20 22.5523 19.5523 23 19 23C17.6512 23 16.6773 23.407 16.0421 24.0421C15.407 24.6773 15 25.6512 15 27C15 27.5523 14.5523 28 14 28C13.4477 28 13 27.5523 13 27C13 25.6512 12.593 24.6773 11.9579 24.0421C11.3227 23.407 10.3488 23 9 23C8.44771 23 8 22.5523 8 22C8 21.4477 8.44771 21 9 21C10.3488 21 11.3227 20.593 11.9579 19.9579C12.593 19.3227 13 18.3488 13 17C13 16.4477 13.4477 16 14 16ZM14 20.6085C13.8162 20.8821 13.6069 21.1373 13.3721 21.3721C13.1373 21.6069 12.8821 21.8162 12.6085 22C12.8821 22.1838 13.1373 22.3931 13.3721 22.6279C13.6069 22.8627 13.8162 23.1179 14 23.3915C14.1838 23.1179 14.3931 22.8627 14.6279 22.6279C14.8627 22.3931 15.1179 22.1838 15.3915 22C15.1179 21.8162 14.8627 21.6069 14.6279 21.3721C14.3931 21.1373 14.1838 20.8821 14 20.6085Z";
+
+var WORD_D = "M71.7806 20.349C71.4819 20.181 71.1786 19.957 70.8706 19.677C70.5719 19.4063 70.2919 19.0983 70.0306 18.753C69.792 18.4377 69.5845 18.1184 69.4081 17.7953C69.3181 17.7991 69.227 17.801 69.1346 17.801C68.1546 17.801 67.3099 17.591 66.6006 17.171C65.9006 16.751 65.3593 16.163 64.9766 15.407C64.5939 14.6417 64.4026 13.7457 64.4026 12.719C64.4026 11.683 64.5893 10.787 64.9626 10.031C65.3453 9.275 65.8913 8.69167 66.6006 8.281C67.3099 7.861 68.1546 7.651 69.1346 7.651C70.1053 7.651 70.9453 7.861 71.6546 8.281C72.3639 8.69167 72.91 9.275 73.2926 10.031C73.6846 10.787 73.8806 11.6783 73.8806 12.705C73.8806 13.741 73.6846 14.6417 73.2926 15.407C72.91 16.163 72.3639 16.751 71.6546 17.171C71.4518 17.2911 71.2382 17.394 71.014 17.4798C71.2163 17.8119 71.4625 18.1197 71.7526 18.403C72.1539 18.795 72.5693 19.1263 72.9986 19.397L71.7806 20.349ZM66.2926 12.719C66.2926 13.8297 66.5306 14.6977 67.0066 15.323C67.4826 15.9483 68.1919 16.261 69.1346 16.261C70.0493 16.261 70.754 15.9483 71.2486 15.323C71.7433 14.6977 71.9906 13.8297 71.9906 12.719C71.9906 11.599 71.7433 10.731 71.2486 10.115C70.7633 9.499 70.0586 9.191 69.1346 9.191C68.1919 9.191 67.4826 9.499 67.0066 10.115C66.5306 10.731 66.2926 11.599 66.2926 12.719ZM60.7461 7.791V17.661H62.5521V7.791H60.7461ZM47.7948 17.661L44.3107 7.79633L39.5621 12.532L44.652 17.661H42.398L37.834 13.097H37.806V17.661H36V7.791H37.806V12.159H37.834L42.132 7.791H44.3088H44.316H46.1848L48.6033 15.0718L51.2108 7.791H52.5548L54.9897 15.1212L57.5388 7.791H59.3028L55.7888 17.661H54.2908L51.8379 10.5135L49.2928 17.661H47.7948Z";
+
+var SPARK = '<svg class="spark" viewBox="0 0 28 28" aria-hidden="true"><path d="' + SPARK_D + '"/></svg>';
+var WORD  = '<svg class="word" viewBox="36 7.6 38 12.9" aria-hidden="true"><path d="' + WORD_D + '"/></svg>';
+
+var CONCEPTS = [
+  {
+    id:'01', name:'Spectrum Ring', slot:'right', cls:'k--ring', scale:1.7, core:true,
+    note:'A dark glass core held inside a 1.5px conic border that turns slowly. The button itself barely exists — the edge is the whole design, and it never sits still.',
+    cost:'<b>Cost:</b> a rotating spectrum next to KW Red gives the bar three identities at once. It is the reference board’s idea at full strength, and full strength is the problem.',
+    attrs:{Shape:'38px pill, 1.5px conic edge',Light:'Border only',Palette:'Full spectrum — off-system',Motion:'7s rotation, always on'},
+    refs:[
+      {app:'Higgsfield — gradient-ringed selection',url:'https://mobbin.com/screens/856639a9-2cc1-4323-90b2-611bd0b88709'},
+      {app:'Telegram — premium gradient CTA',url:'https://mobbin.com/screens/6f4b0053-07a2-4c61-84c0-bea482dafc76'}
+    ]
+  },
+  {
+    id:'02', name:'Neon Outline', slot:'right', cls:'k--neon', scale:1.7,
+    note:'The same idea in one hue: a 1px cyan stroke, cyan label, light spilling both inward and outward. No fill to speak of, so the bar stays dark and the button reads as powered.',
+    cost:'<b>Cost:</b> text-shadow on a 14px label is fragile — it softens the wordmark’s counters. The glow needs a ceiling or KWIQ starts to look blurry.',
+    attrs:{Shape:'36px pill, 1px stroke',Light:'Inner + outer, cyan',Palette:'KWIQ cyan only',Motion:'Glow intensifies on hover'},
+    refs:[
+      {app:'Obvious — cyan neon primary',url:'https://mobbin.com/screens/5f8aab9a-1f0e-4d9c-b085-492199cd76d2'}
+    ]
+  },
+  {
+    id:'03', name:'Bloom', slot:'right', cls:'k--bloom', scale:1.7,
+    note:'Solid cyan face, then three stacked shadows carrying that cyan out across the bar. The chrome around the button is visibly lit by it — the reference board’s core move, at its most literal.',
+    cost:'<b>Cost:</b> the spill lands on whatever is adjacent. At 1100px the avatar sits inside the glow, and the bar’s right end stops feeling like separate controls.',
+    attrs:{Shape:'36px pill, r-full',Light:'3-stop spill, up to 90px',Palette:'KWIQ cyan only',Motion:'Spill widens on hover'},
+    refs:[
+      {app:'Shopify — Sidekick bloom',url:'https://mobbin.com/screens/abec76be-27e9-4e26-8601-c22394fc6c4c'},
+      {app:'Linktree — glowing AI orb',url:'https://mobbin.com/screens/1bac971c-4dff-497f-a3ec-4c9678d7e308'}
+    ]
+  },
+  {
+    id:'04', name:'Aurora Fill', slot:'right', cls:'k--aurora', scale:1.7,
+    note:'Cyan into indigo into violet across the face, with the identical gradient blurred and offset underneath so the colour appears to leak out from behind the pill.',
+    cost:'<b>Cost:</b> two thirds of this gradient is not in XDS. It is the most current look here and the one with the shortest shelf life — a 2026 timestamp on permanent chrome.',
+    attrs:{Shape:'36px pill, r-full',Light:'Blurred twin beneath',Palette:'Cyan → indigo → violet',Motion:'Blur deepens on hover'},
+    refs:[
+      {app:'Suno — gradient primary on black',url:'https://mobbin.com/screens/ac1b11c5-f4c2-47bf-a266-ace9ab7cbb19'},
+      {app:'Kraken — violet gradient CTA',url:'https://mobbin.com/screens/df0b19b4-c93b-45a2-900a-2f6db0410bac'}
+    ]
+  },
+  {
+    id:'05', name:'Glass Capsule', slot:'right', cls:'k--glass', scale:1.7,
+    note:'Frosted and translucent, lit by a single white hairline along the top edge. The only cyan is the mark. It borrows the bar’s own darkness instead of adding a new colour to it.',
+    cost:'<b>Cost:</b> backdrop-blur over a flat bar buys you nothing — glass needs something behind it to distort. It only earns its keep if the bar ever gains an image or a gradient.',
+    attrs:{Shape:'36px pill, r-full',Light:'Top hairline, inner',Palette:'White glass + cyan mark',Motion:'Cyan ring on hover'},
+    refs:[
+      {app:'Suno — glass panels over aurora',url:'https://mobbin.com/screens/ac92aea2-6d7c-4b5d-bfb6-ae6612a075c7'},
+      {app:'Higgsfield — dark glass modal',url:'https://mobbin.com/screens/b924f1b7-4bc2-446b-ace4-7d70ffe7b042'}
+    ]
+  },
+  {
+    id:'06', name:'Aura Orb', slot:'right', cls:'k--orb', scale:2.0, core:true,
+    note:'A 38px conic disc with a dark core and a blurred copy of itself radiating behind, both turning on slow, unequal loops. Mark only — the panel carries the name.',
+    cost:'<b>Cost:</b> no wordmark in the bar while KWIQ is still earning its name, plus two live animations on a control agents see on every page load.',
+    attrs:{Shape:'38px disc',Light:'Blurred conic halo',Palette:'Cyan → aqua → violet',Motion:'7s ring, 9s halo'},
+    refs:[
+      {app:'ElevenLabs — conic voice orb',url:'https://mobbin.com/screens/8e1fb2d5-4b3c-44ab-a104-cc23054d1b6f'},
+      {app:'Linktree — glowing AI orb',url:'https://mobbin.com/screens/1bac971c-4dff-497f-a3ec-4c9678d7e308'}
+    ]
+  },
+  {
+    id:'07', name:'Underglow', slot:'right', cls:'k--under', scale:1.7,
+    note:'The most restrained reading of the family: a flat cyan face with the colour pooled directly beneath it, so the pill looks lifted off the bar rather than lit up. It rises on hover and sinks on press.',
+    cost:'<b>Cost:</b> a coloured drop shadow is a new elevation idiom for XDS. Ship it once and every hover state in Command will want one.',
+    attrs:{Shape:'36px pill, r-full',Light:'Coloured shadow below',Palette:'KWIQ cyan only',Motion:'Lifts 1px, sinks 2px'},
+    refs:[
+      {app:'Mercor — lifted gradient primary',url:'https://mobbin.com/screens/f80b5e1a-d62e-4c3c-8b3d-adf8a61fd902'},
+      {app:'Suno — gradient primary on black',url:'https://mobbin.com/screens/ac1b11c5-f4c2-47bf-a266-ace9ab7cbb19'}
+    ]
+  },
+  {
+    id:'08', name:'Iridescent Field', slot:'center', cls:'k--field', scale:1, field:true,
+    note:'The button becomes the first line of the conversation, and the iridescence lives inside the field instead of around a pill. Cyan sparkle leading, ⌘K trailing; the wash deepens as you approach it.',
+    cost:'<b>Cost:</b> it claims the centre of the bar, which search will also want. And a tinted input reads as “decorated” to some agents — the wash has to stay under the text, never near it.',
+    attrs:{Shape:'38px field, r-full',Light:'Internal wash, focus ring',Palette:'Cyan → indigo → violet, low alpha',Motion:'Wash intensifies toward focus'},
+    refs:[
+      {app:'Microsoft Copilot — iridescent listening state',url:'https://mobbin.com/screens/82254fbd-cb92-432d-a462-172a0a55aab9'},
+      {app:'SchoolAI — glowing prompt field',url:'https://mobbin.com/screens/d644be48-fe13-4b9b-b25e-023ca668e9ce'}
+    ]
+  },
+  {
+    id:'09', name:'Halo Ring', slot:'right', cls:'k--halo', scale:1.7,
+    note:'A dark pill wearing a bright cyan ring, with a second ring that expands and fades outward. Tie the ping to something real — a lead gone cold, a task KWIQ can draft — and the chrome starts telling you when to look.',
+    cost:'<b>Cost:</b> shown here on a loop, which is the wrong behaviour. A halo that always pings is a halo agents stop seeing inside a week.',
+    attrs:{Shape:'36px pill + detached ring',Light:'Ring, not fill',Palette:'KWIQ cyan only',Motion:'3.4s expanding ping'},
+    refs:[
+      {app:'Higgsfield — ringed active state',url:'https://mobbin.com/screens/856639a9-2cc1-4323-90b2-611bd0b88709'},
+      {app:'Obvious — cyan neon primary',url:'https://mobbin.com/screens/5f8aab9a-1f0e-4d9c-b085-492199cd76d2'}
+    ]
+  },
+  {
+    id:'10', name:'Nebula Rail', slot:'edge', cls:'k--rail', scale:1, core:true,
+    note:'Square, flush to the top, bottom and right of the bar, with three blurred colour fields drifting inside it. Not a button placed in the chrome — a window cut into it, and the obvious hinge for a right-side panel.',
+    cost:'<b>Cost:</b> zero radius reads as a different product than the rest of Command, it takes the avatar’s corner, and the drift animation runs forever at the edge of every page.',
+    attrs:{Shape:'64px full-bleed, r-0',Light:'Contained — weather inside',Palette:'Cyan + aqua + violet fields',Motion:'14s drift, alternating'},
+    refs:[
+      {app:'Sora — gradient field panel',url:'https://mobbin.com/screens/e5f5567c-4922-4a28-b49f-aa6d2258bbe5'},
+      {app:'Suno — aurora behind dark glass',url:'https://mobbin.com/screens/ac92aea2-6d7c-4b5d-bfb6-ae6612a075c7'}
+    ]
+  },
+  {
+    id:'11', name:'Nebula Pill', slot:'right', cls:'k--nebula', scale:1.7, core:true,
+    note:'10’s weather, contained. The same three drifting colour fields, deepened and clipped into a 36px pill, so the effect lives inside an ordinary bar control instead of redefining the corner of the chrome.',
+    cost:'<b>Cost:</b> at 36px the fields are too small to register as movement — you get a mottled tint rather than a nebula. The drift is doing work almost nobody will see.',
+    attrs:{Shape:'36px pill, r-full',Light:'Contained — weather inside',Palette:'Cyan + aqua + violet, deepened',Motion:'14s drift, alternating'},
+    refs:[
+      {app:'Sora — gradient field panel',url:'https://mobbin.com/screens/e5f5567c-4922-4a28-b49f-aa6d2258bbe5'},
+      {app:'Suno — aurora behind dark glass',url:'https://mobbin.com/screens/ac92aea2-6d7c-4b5d-bfb6-ae6612a075c7'}
+    ]
+  },
+  {
+    id:'12', name:'Aura Pill', slot:'right', cls:'k--aurapill', scale:1.7, core:true,
+    note:'06 stretched to hold the wordmark. The brand conic sits on the edge and a soft cyan-to-violet halo sits under it, but nothing moves until you point at it — the stroke starts turning on hover and stops again when you leave.',
+    cost:'<b>Cost:</b> a 38px pill gives the conic far more edge than a 38px disc, so the gradient bands become individually readable — and a readable rainbow beside KW Red is a second brand in the chrome.',
+    attrs:{Shape:'38px pill, 1.5px conic edge',Light:'Static halo, cyan + violet',Palette:'Cyan → aqua → indigo → violet',Motion:'Stroke turns on hover only'},
+    refs:[
+      {app:'ElevenLabs — conic voice orb',url:'https://mobbin.com/screens/8e1fb2d5-4b3c-44ab-a104-cc23054d1b6f'},
+      {app:'Higgsfield — gradient-ringed selection',url:'https://mobbin.com/screens/856639a9-2cc1-4323-90b2-611bd0b88709'}
+    ]
+  },
+  {
+    id:'13', name:'Brand Ramp', slot:'right', cls:'k--ramp', scale:1.7,
+    note:'Cyan into aqua into indigo into violet, but run top-to-bottom at close values rather than across the face as a stripe — so it reads as one lit surface instead of four colours. A white hairline along the top edge and a shadow along the bottom give it the small amount of roundness the reference has.',
+    cost:'<b>Cost:</b> the soft ramp only stays soft while it is light, and white on it lands near 3:1 — under AA for the wordmark at this size. Dropping the ramp dark enough to pass would cost exactly the airiness that makes it work. An ink label passes and looks heavier.',
+    attrs:{Shape:'36px pill, r-full',Light:'Top hairline + bottom shade',Palette:'Cyan → aqua → indigo → violet, vertical',Motion:'Lightens and lifts on hover'},
+    refs:[
+      {app:'Telegram — premium gradient CTA',url:'https://mobbin.com/screens/6f4b0053-07a2-4c61-84c0-bea482dafc76'},
+      {app:'Kraken — violet gradient CTA',url:'https://mobbin.com/screens/df0b19b4-c93b-45a2-900a-2f6db0410bac'},
+      {app:'Suno — gradient primary on black',url:'https://mobbin.com/screens/ac1b11c5-f4c2-47bf-a266-ace9ab7cbb19'}
+    ]
+  }
+];
+
+var ICON_STORE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h18l-1.4-4.2A1 1 0 0 0 18.65 4H5.35a1 1 0 0 0-.95.8Z"/><path d="M4.5 9v10.5h15V9"/><path d="M9.5 19.5V14h5v5.5"/></svg>';
+var ICON_HELP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.4v.4"/><path d="M12 17h.01"/></svg>';
+var ICON_BELL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8.5a6 6 0 1 0-12 0c0 5-2 6.5-2 6.5h16s-2-1.5-2-6.5Z"/><path d="M10.3 18.5a2 2 0 0 0 3.4 0"/></svg>';
+var ICON_CARET = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>';
+
+/* ── In-situ frame views: the same bar, in a crop or a full dashboard ──── */
+var BY_ID = {};
+
+var GREETING =
+  '<div class="frame__body"><span class="fb__date">Thu March 3rd, 2026</span>' +
+  '<span class="fb__hi">Good morning, Nina</span></div>';
+
+function barView(c){ return bar(c) + GREETING; }
+
+function svg(d){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+}
+
+var RAIL_ICONS = [
+  svg('<path d="M4 10.5 12 4l8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/>'),
+  svg('<circle cx="12" cy="8" r="3.4"/><path d="M5.5 19a6.5 6.5 0 0 1 13 0"/>'),
+  svg('<path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="m3.4 5 1 1 2-2"/><path d="m3.4 11 1 1 2-2"/><path d="m3.4 17 1 1 2-2"/>'),
+  svg('<path d="M4 10v4l10 4V6L4 10Z"/><path d="M14 9a3.5 3.5 0 0 1 0 6"/>'),
+  svg('<path d="M7 8h11l-3-3"/><path d="M17 16H6l3 3"/>'),
+  svg('<path d="M4 20V5"/><path d="M4 20h16"/><rect x="8" y="12" width="3" height="5"/><rect x="13.5" y="9" width="3" height="8"/>'),
+  svg('<path d="M4 20h16"/><path d="M14 5l5 5-9 9H5v-5l9-9Z"/>'),
+  svg('<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>')
+];
+var I_KEBAB = svg('<circle cx="12" cy="6" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="12" cy="18" r="1.3"/>');
+var I_EDIT  = svg('<path d="M14 5l5 5-9 9H5v-5l9-9Z"/>');
+
+function cmdBar(c){
+  var spec = specimen(c);
+  var left = '<span class="cmd__logo">kw</span>' +
+    '<nav class="cmd__nav"><a class="on">command</a><a>connect</a><a>command<sup>MC</sup></a></nav>';
+  var right = '<span class="cmd__right">' +
+    (c.slot === 'right' ? '<span class="cmd__kwiq">' + spec + '</span>' : '') +
+    '<span class="cmd__ico">' + ICON_STORE + '</span>' +
+    '<span class="cmd__belldot"><span class="cmd__ico">' + ICON_BELL + '</span><span class="cmd__badge">211</span></span>' +
+    '<span class="cmd__me"><span class="cmd__av">NR</span>' +
+      '<span class="cmd__meid"><b>Nina Royals</b><span>Nina Royals Team</span></span>' + ICON_CARET + '</span>' +
+    '<span class="cmd__help">' + ICON_HELP + '</span>' +
+  '</span>';
+  return '<div class="cmd__bar' + (c.slot === 'edge' ? ' cmd__bar--flush' : '') + '">' +
+    left + '<span class="cmd__spring"></span>' +
+    (c.slot === 'center' ? '<span class="cmd__kwiq cmd__kwiq--center">' + spec + '</span><span class="cmd__spring"></span>' : '') +
+    right +
+    (c.slot === 'edge' ? '<span class="cmd__kwiq cmd__kwiq--edge">' + spec + '</span>' : '') +
+  '</div>';
+}
+
+function cmdPill(ic, t, s, n){
+  return '<div class="pill"><span class="pill__ic">' + ic + '</span>' +
+    '<span class="pill__t"><b>' + t + '</b><span>' + s + '</span></span>' +
+    '<span class="pill__n">' + n + '</span></div>';
+}
+function taskRow(name, pc, pl, pg, d, tm){
+  return '<tr><td><b>' + name + '</b></td><td></td>' +
+    '<td><span class="who"><span class="a">NR</span>Nina Royals</span></td>' +
+    '<td><span class="prio ' + pc + '">' + pg + pl + '</span></td>' +
+    '<td>' + d + '<div class="tk__time">' + tm + '</div></td>' +
+    '<td><span class="tk__act">' + svg('<circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.4 2.4 4.6-5"/>') + I_KEBAB + '</span></td></tr>';
+}
+function goal(label){
+  return '<div class="goal"><b>' + label + '</b><em>0 YTD</em><span class="ring"></span></div>';
+}
+function leadRow(n, ago){
+  return '<div class="lead"><span class="lead__cb"></span>' +
+    '<span class="lead__t"><b>' + n + '</b><span>Facebook Ad Lead</span></span>' +
+    '<span class="lead__ago">' + ago + '</span><span class="lead__kb">' + I_KEBAB + '</span></div>';
+}
+function apptRow(t, title, sub){
+  return '<div class="appt"><span class="appt__t">' + t + '</span>' +
+    '<span class="appt__d"><b>' + title + '</b><span>' + sub + '</span></span>' +
+    '<span class="appt__av">NR</span></div>';
+}
+
+function dashView(c){
+  var rail = '<div class="cmd__rail">' + RAIL_ICONS.map(function(ic, i){
+    return '<span class="cmd__ri' + (i === 0 ? ' on' : '') + '">' + ic + '</span>';
+  }).join('') + '</div>';
+
+  var pills = '<div class="cmd__pills">' +
+    cmdPill(svg('<rect x="6" y="3" width="13" height="18" rx="2"/><path d="M6 7H3.8"/><path d="M6 12H3.8"/><path d="M6 17H3.8"/><circle cx="12.5" cy="10" r="2.1"/><path d="M9.2 15.6a3.3 3.3 0 0 1 6.6 0"/>'), 'Leads Never Contacted', '2 this week', '23') +
+    cmdPill(svg('<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="11" r="2.1"/><path d="M5.6 15.5a3 3 0 0 1 5.8 0"/><path d="M14.5 10h3.5"/><path d="M14.5 13h2.5"/>'), 'Recently Active', '1 today', '7') +
+    cmdPill(svg('<path d="M5 21h14"/><path d="M6 21v-6h12v6"/><path d="M7 15a2 2 0 0 1 4 0 2 2 0 0 0 4 0 2 2 0 0 1 4 0"/><path d="M12 9V6"/>'), 'Birthdays', '1 today', '3') +
+    cmdPill(svg('<path d="M4 10.5 12 4l8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/>'), 'Anniversaries', '--', '--') +
+  '</div>';
+
+  var tasks = '<div class="card tk">' +
+    '<div class="card__h">' + svg('<path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="m3.4 5 1 1 2-2"/><path d="m3.4 11 1 1 2-2"/><path d="m3.4 17 1 1 2-2"/>') +
+      '<b>Tasks</b><span class="sp"></span>' +
+      '<span class="tk__ctl">' +
+        '<span class="tk__drop">All Due Dates' + ICON_CARET + '</span>' +
+        '<span class="tk__drop">All Tasks' + ICON_CARET + '</span>' +
+        '<span class="tk__seg"><span class="on">My Tasks</span><span>Team Tasks</span></span>' +
+      '</span>' +
+    '</div>' +
+    '<table><thead><tr><th>Task</th><th>Linked To</th><th>Assigned To</th><th>Priority</th><th>Due</th><th></th></tr></thead><tbody>' +
+      taskRow('Build Your Contacts Databank', 'prio--hi', 'High', svg('<path d="M7 14l5-5 5 5"/>'), '02/09', '10:52') +
+      taskRow('Connect Applications', 'prio--md', 'Medium', svg('<path d="M7 12h10"/>'), '02/09', '10:54') +
+      taskRow('Launch Agent Site', 'prio--md', 'Medium', svg('<path d="M7 12h10"/>'), '02/09', '10:55') +
+      taskRow('Import Your Sphere', 'prio--hi', 'High', svg('<path d="M7 14l5-5 5 5"/>'), '02/10', '09:15') +
+      taskRow('Set Up Your Website', 'prio--md', 'Medium', svg('<path d="M7 12h10"/>'), '02/10', '11:40') +
+      taskRow('Review New Leads', 'prio--hi', 'High', svg('<path d="M7 14l5-5 5 5"/>'), '02/11', '08:00') +
+      taskRow('Complete Your Profile', 'prio--md', 'Medium', svg('<path d="M7 12h10"/>'), '02/11', '14:20') +
+    '</tbody></table>' +
+    '<div class="tk__foot"><span class="tk__create">' + svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v8"/><path d="M8 12h8"/>') + 'Create Task</span>' +
+      '<span class="tk__page">' + svg('<path d="M14 6l-6 6 6 6"/>') + '<span><b>1-50</b> of 438</span>' + svg('<path d="M10 6l6 6-6 6"/>') + '</span>' +
+    '</div>' +
+  '</div>';
+
+  var goals = '<div class="card">' +
+    '<div class="card__h">' + svg('<path d="M7 4h10v4a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4.5v1a3 3 0 0 0 3 3"/><path d="M17 6h2.5v1a3 3 0 0 1-3 3"/><path d="M9.5 16h5"/><path d="M12 13v3"/><path d="M8.5 20h7"/>') +
+      '<b>Goals</b><span class="sp"></span><span class="tk__drop">Year to Date' + ICON_CARET + '</span></div>' +
+    '<div class="goals"><div class="goals__lg">Lead Generation</div><div class="goals__row">' +
+      goal('Leads') + goal('Appointments') + goal('Under Contract') + goal('Closed Units') +
+      '<div class="goal goal--gci"><b>GCI Goal Breakdown</b><em>$0 YTD</em><em class="small">(based on opportunities)</em></div>' +
+    '</div></div></div>';
+
+  var mc = '<div class="card">' +
+    '<div class="card__h">' + svg('<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16"/><path d="M8 3v4"/><path d="M16 3v4"/>') +
+      '<b>Demo Market Center</b><span class="sp"></span><span class="card__edit">' + I_EDIT + 'Edit</span></div>' +
+    '<div class="mc__ban"><span class="mc__arrow l">' + svg('<path d="M14 6l-6 6 6 6"/>') + '</span><b>NYIMAK</b>' +
+      '<span class="mc__arrow r">' + svg('<path d="M10 6l6 6-6 6"/>') + '</span></div>' +
+    '<div class="mc__cap"><b>sell something</b><span>Sponsored by <a>Joseph Smith</a></span></div>' +
+  '</div>';
+
+  var partners = '<div class="card"><div class="card__h">' +
+    svg('<path d="M10 13a3 3 0 0 0 4 0l3-3a3 3 0 0 0-4-4l-1 1"/><path d="M14 11a3 3 0 0 0-4 0l-3 3a3 3 0 0 0 4 4l1-1"/>') +
+    '<b>Explore Preferred Partners</b><span class="sp"></span>' +
+    '<span class="card__edit">' + svg('<path d="M7 17 17 7"/><path d="M9 7h8v8"/>') + '</span>' +
+    '<span class="card__edit">' + I_EDIT + 'Edit</span></div></div>';
+
+  var appts = '<div class="card">' +
+    '<div class="card__h">' + svg('<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16"/><path d="M8 3v4"/><path d="M16 3v4"/>') +
+      '<b>Upcoming Appointments</b><span class="sp"></span><span class="tk__drop">This Week' + ICON_CARET + '</span></div>' +
+    apptRow('9:00a', 'Buyer consult — the Delgados', 'Zoom · 30 min') +
+    apptRow('10:30a', 'Showing — 4820 Oak Ridge', 'with Marcus Bell') +
+    apptRow('12:00p', 'Team huddle', 'Nina Royals Team') +
+    apptRow('1:30p', 'Listing presentation — 219 Elm', 'with the Coopers') +
+    apptRow('3:00p', 'CMA review — 88 Harbor', 'Priya Nair') +
+    apptRow('4:15p', 'Open house prep', 'Saturday, 219 Elm') +
+    apptRow('5:00p', 'Follow-up calls', '3 leads queued') +
+    apptRow('5:45p', 'Sync — preferred lender', 'Joseph Smith') +
+  '</div>';
+
+  var leads = '<div class="card">' +
+    '<div class="card__h">' + svg('<circle cx="12" cy="12" r="9"/><path d="M10 8v8h5"/>') + '<b>Recent Leads</b></div>' +
+    leadRow('Carter Dean', '5 Days ago') + leadRow('Alexis Nichols', '5 Days ago') + leadRow('Joanne Rice', '6 Days ago') +
+    leadRow('Marcus Bell', '6 Days ago') + leadRow('Priya Nair', '1 Week ago') + leadRow('The Coopers', '1 Week ago') +
+  '</div>';
+
+  return '<div class="deskcrop"><div class="deskscale">' +
+    '<div class="cmd">' + cmdBar(c) +
+      '<div class="cmd__wrap">' + rail +
+        '<div class="cmd__main">' +
+          '<div class="cmd__head"><h1 class="cmd__welcome">Welcome Home, Nina</h1>' +
+            '<span class="cmd__customize">' + I_EDIT + 'Customize</span></div>' +
+          pills +
+          '<div class="cmd__cols"><div>' + tasks + goals + appts + '</div><div>' + mc + partners + leads + '</div></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</div></div>';
+}
+
+function specimen(c, stateCls){
+  var content = '';
+  if (c.field) {
+    content = SPARK + '<span class="ph">Ask KWIQ</span><kbd>&#8984;K</kbd>';
+  } else if (c.cls === 'k--orb') {
+    content = SPARK;
+  } else {
+    content = SPARK + WORD;
+  }
+  var inner = c.core ? '<span class="core">' + content + '</span>' : content;
+  var label = (c.cls === 'k--orb') ? ' aria-label="Open KWIQ"' : '';
+  var cls = 'k ' + c.cls + (stateCls ? ' ' + stateCls : '');
+  return '<button type="button" class="' + cls + '"' + label + '>' + inner + '</button>';
+}
+
+function bar(c){
+  var slot = '<span class="bar__slot' + (c.slot === 'center' ? ' bar__slot--center' : '') + '">' + specimen(c) + '</span>';
+  var tools =
+    '<span class="bar__tools">' + ICON_STORE + ICON_HELP + ICON_BELL + '</span>' +
+    '<span class="bar__me"><span class="bar__av"></span><span>Nina Royals</span>' + ICON_CARET + '</span>';
+
+  var h = '<div class="bar' + (c.slot === 'edge' ? ' bar--flush' : '') + '">';
+  h += '<span class="bar__kw">kw</span>';
+  h += '<span class="bar__nav"><b>command</b><i>connect</i></span>';
+  h += (c.slot === 'center') ? slot : '<span class="bar__gap"></span>';
+  if (c.slot === 'right') h += slot;
+  h += tools;
+  if (c.slot === 'edge') h += specimen(c);
+  h += '</div>';
+  return h;
+}
+
+function plate(c){
+  var railCell = (c.slot === 'edge') ? ' states__cell--rail' : '';
+  var z = 'transform:scale(' + c.scale + ')';
+
+  var attrRows = '';
+  for (var k in c.attrs){
+    attrRows += '<li><span>' + k + '</span><b>' + c.attrs[k] + '</b></li>';
+  }
+
+  var refLinks = c.refs.map(function(r){
+    return '<a href="' + r.url + '" target="_blank" rel="noopener">' + r.app + '</a>';
+  }).join('<br>');
+
+  var states = ['rest','hover','pressed'].map(function(s,i){
+    var sc = i === 1 ? 'is-hover' : (i === 2 ? 'is-active' : '');
+    return '<div class="states__cell' + railCell + '">' +
+             '<div class="zoom" style="' + z + '">' + specimen(c, sc) + '</div>' +
+             '<em>' + s + '</em>' +
+           '</div>';
+  }).join('');
+
+  return '<article class="plate" id="c' + c.id + '">' +
+    '<div class="brief">' +
+      '<span class="brief__idx">' + c.id + ' / ' + String(CONCEPTS.length).padStart(2, '0') + '</span>' +
+      '<h2>' + c.name + '</h2>' +
+      '<p class="brief__note">' + c.note + '</p>' +
+      '<p class="brief__cost">' + c.cost + '</p>' +
+      '<ul class="attrs">' + attrRows + '</ul>' +
+      '<p class="brief__ref">Ref · ' + refLinks + '</p>' +
+    '</div>' +
+    '<div class="stage">' +
+      '<div class="stage__bar">' +
+        '<span class="stage__cap">In situ</span>' +
+        '<div class="tabs" role="tablist" aria-label="In-situ view">' +
+          '<button type="button" class="tab is-active" role="tab" data-view="bar" aria-selected="true">Top bar</button>' +
+          '<button type="button" class="tab" role="tab" data-view="full" aria-selected="false">Full dashboard</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="frame" id="frame-' + c.id + '">' + barView(c) + '</div>' +
+      '<div class="statesblock">' +
+        '<p class="stage__cap">States — ' + (c.scale === 1 ? '1:1' : 'enlarged ' + c.scale + '×') + '</p>' +
+        '<div class="states">' + states + '</div>' +
+      '</div>' +
+    '</div>' +
+  '</article>';
+}
+
+document.getElementById('plates').innerHTML = CONCEPTS.map(plate).join('');
+document.getElementById('index').innerHTML = CONCEPTS.map(function(c){
+  return '<a href="#c' + c.id + '"><i>' + c.id + '</i>' + c.name + '</a>';
+}).join('');
+
+/* ── In-situ tab behaviour (each concept switches independently) ───────── */
+CONCEPTS.forEach(function(c){ BY_ID[c.id] = c; });
+
+document.getElementById('plates').addEventListener('click', function(e){
+  var tab = e.target.closest('.tab');
+  if (!tab || tab.classList.contains('is-active')) return;
+  var stage = tab.closest('.stage');
+  var frame = stage.querySelector('.frame');
+  var c = BY_ID[frame.id.replace('frame-', '')];
+  var view = tab.getAttribute('data-view');
+
+  var tabs = stage.querySelectorAll('.tab');
+  for (var i = 0; i < tabs.length; i++){
+    var on = tabs[i] === tab;
+    tabs[i].classList.toggle('is-active', on);
+    tabs[i].setAttribute('aria-selected', String(on));
+  }
+  frame.innerHTML = (view === 'full') ? dashView(c) : barView(c);
+  if (view === 'full') fitDesk(frame);
+
+  // States strip is only meaningful for the top-bar crop — hide it in the dashboard view
+  var sb = stage.querySelector('.statesblock');
+  if (sb) sb.hidden = (view === 'full');
+});
+
+/* Scale the 1440px desktop layout to fit the frame, clipped to a ~1440×1024 landscape window */
+function fitDesk(scope){
+  var crops = (scope || document).querySelectorAll('.deskcrop');
+  for (var i = 0; i < crops.length; i++){
+    var cr = crops[i], sc = cr.querySelector('.deskscale');
+    if (!sc) continue;
+    var k = cr.clientWidth / 1440;
+    sc.style.transform = 'scale(' + k + ')';
+    cr.style.height = 1024 * k + 'px';
+  }
+}
+var _deskT;
+window.addEventListener('resize', function(){
+  clearTimeout(_deskT);
+  _deskT = setTimeout(function(){ fitDesk(); }, 120);
+});
+</script>
